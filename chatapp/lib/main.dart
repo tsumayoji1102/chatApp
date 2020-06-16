@@ -1,4 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/gestures.dart';
+// 画像用にimport
+import 'package:flutter/services.dart';
+import 'package:flutter/rendering.dart';
+import 'dart:typed_data';
+import 'dart:async';
+import 'dart:ui' as ui;
 
 void main() {
   runApp(MyApp());
@@ -7,8 +14,7 @@ void main() {
 // 静的な部分を構築
 class MyApp extends StatelessWidget {
   // This widget is the root of your application.
-  final title   = "サンプルのタイトル";
-  final product = "メッセージはここ";
+  final title   = "SNS風アプリ";
   @override
   Widget build(BuildContext context) {
     //　マテリアルアプリを返す（クパチーノにもできる？）
@@ -24,8 +30,9 @@ class MyApp extends StatelessWidget {
       // homeArea(Scaffoldで、ベーシックなマテリアルデザインにできる）
       home: MyHomePage(
         title: this.title,
-        product: this.product,
-      )
+      ),
+      // ここで画面遷移のrouteを設定できる
+      initialRoute: "/",
     );
   }
 }
@@ -33,19 +40,10 @@ class MyApp extends StatelessWidget {
 // ウィジェットクラス
 class MyHomePage extends StatefulWidget {
 
-  MyHomePage({Key key, this.title, this.product}) : super(key: key);
-
-  // This widget is the home page of your application. It is stateful, meaning
-  // that it has a State object (defined below) that contains fields that affect
-  // how it looks.
-
-  // This class is the configuration for the state. It holds the values (in this
-  // case the title) provided by the parent (in this case the App widget) and
-  // used by the build method of the State. Fields in a Widget subclass are
-  // always marked "final".
+  // 初期化
+  MyHomePage({Key key, this.title}) : super(key: key);
 
   final String title;
-  final String product;
 
   // ここで、ステートを読み込む
   @override
@@ -53,64 +51,172 @@ class MyHomePage extends StatefulWidget {
 }
 
 // ステートクラス（ウィジェットで読み込ませる）
-class _MyHomePageState extends State<MyHomePage> {
+class _MyHomePageState extends State<MyHomePage>{
 
-  Product _product;
-
-  static final _products = [Product("りんご", 200), Product("みかん", 300)];
-  // 表示するもの
-
-  @override
-  void initState(){
-    super.initState();
-    _product = _products.first;
-  }
-
-  void _setProduct(){
-    setState(() {
-      // シャッフル
-      _product = (_products..shuffle()).first;
-    });
-
-}
+  final _selectedPage = [PostListPage(), ProfilePage()];
+  int    _selectedIndex = 0;
 
   @override
   Widget build(BuildContext context) {
-    // This method is rerun every time setState is called, for instance as done
-    // by the _incrementCounter method above.
-    //
-    // The Flutter framework has been optimized to make rerunning build methods
-    // fast, so that you can just rebuild anything that needs updating rather
-    // than having to individually change instances of widgets.
+
+    // 画面作成
     return Scaffold(
       appBar: AppBar(
-        // Here we take the value from the MyHomePage object that was created by
-        // the App.build method, and use it to set our appbar title.
         title: Text(widget.title),
       ),
-      body: Text(_product.toString(), style: TextStyle(fontSize: 32.0),),
-      // 右下にボタンが出せる
-      floatingActionButton: FloatingActionButton(
-        onPressed: _setProduct,  // タップした時
-        tooltip: 'set product.', //
-        child: Icon(Icons.star), //
-      ), // This trailing comma makes auto-formatting nicer for build methods.
+      body: Column(
+        children: <Widget>[
+          Expanded(
+            child: _selectedPage[_selectedIndex],
+          ),
+          BottomNavigationBar(
+            currentIndex: _selectedIndex,
+            items: <BottomNavigationBarItem>[
+              BottomNavigationBarItem(
+                title: Text("投稿"),
+                icon: Icon(Icons.home)
+              ),
+              BottomNavigationBarItem(
+                title: Text("プロフィール"),
+                icon: Icon(Icons.account_circle)
+              )
+            ],
+            onTap: (int value){
+              setState(() {
+                _selectedIndex = value;
+              });
+            },
+          )
+        ],
+      )
+    );
+  }
+
+}
+
+class PostListPage extends StatefulWidget{
+
+  PostListPage({Key key}) : super(key: key);
+
+  @override
+  State<StatefulWidget> createState() => _PostListState();
+}
+
+class _PostListState extends State<PostListPage>{
+  
+  List<Widget> postList = [
+    Container(
+      height: 100,
+    )
+  ];
+  
+  @override
+  void initState(){
+    super.initState();
+    
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      body: Column(
+          children: <Widget>[
+            Container(
+              child: Expanded(
+                child: ListView(
+                  children: <Widget>[
+                    
+                  ],
+                )
+              ),
+            ),
+            Container(
+                height: 80,
+                color: Colors.grey[20gio0],
+                padding: EdgeInsets.all(15),
+                child: Row(
+                    children: <Widget>[
+                      Expanded(
+                        child: Container(
+                            padding: EdgeInsets.fromLTRB(10, 5, 20, 10),
+                            child: Center(
+                              child: TextField(
+                                style: TextStyle(
+                                  fontSize: 20.0,
+                                  fontWeight: FontWeight.w200
+                                ),
+                              ),
+                            )
+                        ),
+                      ),
+                      FlatButton(
+                          color: Colors.blue,
+                          onPressed: ((){
+                            print("pressed");
+                          }),
+                          child: Container(
+                            child: Text("投稿", style: TextStyle(
+                                fontSize: 20,
+                                fontWeight: FontWeight.w600,
+                                color: Colors.white), // 丸みをつける
+                            ),
+                          ),
+                          shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.all(Radius.circular(10.0)),
+                              side: BorderSide(color: Colors.blue)
+                          )
+                      ),
+                    ]
+                  )
+              )
+           ],
+          )
     );
   }
 }
 
-// オブジェクトを定義
-class Product{
-  String _fruit;
-  int    _price;
 
-  // コンストラクタ
-  Product(this._fruit, this._price) :super();
+// プロフィールページ
+class ProfilePage extends StatefulWidget{
 
-  // 商品、価格
+  ProfilePage({Key key}) : super(key: key);
   @override
-  String toString(){
-    return this._fruit + this._price.toString() + "Yen";
+  State<StatefulWidget> createState() => _ProfileState();
+}
+
+class _ProfileState extends State<ProfilePage>{
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      body: Column(
+          children: <Widget>[
+            Container(
+              child: Center(
+                child: Text("ここに画像が入る",
+                  style: TextStyle(
+                      fontSize: 28,
+                      fontWeight: FontWeight.w600
+                  ),
+                ),
+              ),
+            ),
+            Container(
+              color: Colors.green,
+              child: Center(
+                child: Text("ここに名前が入る",
+                  style: TextStyle(
+                    fontSize: 28,
+                    fontWeight: FontWeight.w600
+                  ),
+                )
+              )
+            )
+          ],
+        ),
+    );
   }
 }
+
+
 

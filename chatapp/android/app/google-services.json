@@ -1,0 +1,47 @@
+{
+  "project_info": {
+    "project_number": "728295948203",
+    "firebase_url": "https://sample-sns-34b46.firebaseio.com",
+    "project_id": "sample-sns-34b46",
+    "storage_bucket": "sample-sns-34b46.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:728295948203:android:c9917db6648c00654c9cee",
+        "android_client_info": {
+          "package_name": "work.tsumayojiproject.chatapp"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "728295948203-jfonnfvs86tbeujo83j8qoa4tef9j3gr.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyChYXFP81NqBseSAK_x-epmx7HNBrPUyuA"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "728295948203-jfonnfvs86tbeujo83j8qoa4tef9j3gr.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "728295948203-iegkf3bdishbr3sf2cfkp33qse1omsk2.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "work.tsumayojiproject.chatapp"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
