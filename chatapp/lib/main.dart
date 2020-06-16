@@ -104,16 +104,82 @@ class PostListPage extends StatefulWidget{
 
 class _PostListState extends State<PostListPage>{
   
-  List<Widget> postList = [
-    Container(
-      height: 100,
-    )
-  ];
+  List<Widget> postList = [];
   
   @override
   void initState(){
     super.initState();
-    
+
+    for(var i = 0; i < 10; i ++){
+      // 投稿
+      var container = Container(
+        height: 200,
+        padding: EdgeInsets.all(10),
+        child: Container(
+            padding: EdgeInsets.all(10),
+            // 画像と、それ以外で分割
+            child: Row(
+              children: <Widget>[
+                // アイコン
+                Container(
+                  alignment: Alignment.topCenter,
+                  width:  40,
+                  child: Container(
+                    //color: Colors.blue,
+                    padding: EdgeInsets.all(1),
+                    width:  40,
+                    height: 40,
+                    decoration: BoxDecoration(
+                        color: Colors.white,
+                        shape: BoxShape.circle
+                    ),
+                    child: Icon(Icons.android),
+                  ),
+                ),
+                // 情報系
+                Expanded(
+                  // 縦
+                  child: Column(
+                    children: <Widget>[
+                      // 1行目
+                      Row(
+                        children: <Widget>[
+                          Expanded(
+                            child: Container(
+                              padding: EdgeInsets.fromLTRB(10, 0, 0, 10),
+                              child: Text("accountName",
+                              style: TextStyle(
+                                fontSize: 16,
+                                fontWeight: FontWeight.w800
+                              ))
+                            ),
+                          ),
+                          Container(
+                            width: 100,
+                            child: Text("yyyy/MM/dd \nHH:mm"),
+                          )
+                        ],
+                      ),
+                      // 二行目
+                      Container(
+                        padding: EdgeInsets.fromLTRB(10, 10, 0, 0),
+                        child: Text("ここに内容が入るんだよおおおおおおおおおおおおおおおおおおおおおおおおおおおおおおおおおおおおおおおおおおおおおおおおおおおおおおおおおおおおおおおおおおおおおおお"),
+                      )
+                    ],
+                  ),
+                ),
+              ],
+            ),
+            decoration: BoxDecoration(
+                color: Colors.grey[200],
+                border: Border.all(color: Colors.grey[200]),
+                borderRadius: BorderRadius.circular(10)
+            ),
+          )
+
+      );
+      postList.add(container);
+    }
   }
 
   @override
@@ -123,16 +189,16 @@ class _PostListState extends State<PostListPage>{
           children: <Widget>[
             Container(
               child: Expanded(
-                child: ListView(
-                  children: <Widget>[
-                    
-                  ],
-                )
+                  child: ListView(
+                    padding: EdgeInsets.fromLTRB(0, 10, 0, 10),
+                    shrinkWrap: true,
+                    children: postList,
+                  )
               ),
             ),
             Container(
                 height: 80,
-                color: Colors.grey[20gio0],
+                color: Colors.grey[400],
                 padding: EdgeInsets.all(15),
                 child: Row(
                     children: <Widget>[
@@ -143,7 +209,7 @@ class _PostListState extends State<PostListPage>{
                               child: TextField(
                                 style: TextStyle(
                                   fontSize: 20.0,
-                                  fontWeight: FontWeight.w200
+                                  fontWeight: FontWeight.w400
                                 ),
                               ),
                             )
