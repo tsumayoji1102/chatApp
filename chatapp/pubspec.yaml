@@ -23,6 +23,8 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
+
+  shared_preferences: any # UserDefaluts
   firebase_core: ^0.2.5  # add dependency for firebase Core
 
 
