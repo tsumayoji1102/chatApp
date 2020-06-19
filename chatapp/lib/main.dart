@@ -1,5 +1,13 @@
 import 'package:flutter/material.dart';
 
+// 他ファイル読み込み
+import 'package:chatapp/ChildWidget/PostListPage.dart';
+import 'package:chatapp/ChildWidget/ProfilePage.dart';
+
+import 'dart:typed_data';
+import 'dart:async';
+import 'dart:ui' as ui;
+
 void main() {
   runApp(MyApp());
 }
@@ -7,8 +15,7 @@ void main() {
 // 静的な部分を構築
 class MyApp extends StatelessWidget {
   // This widget is the root of your application.
-  final title   = "サンプルのタイトル";
-  final product = "メッセージはここ";
+  final title   = "SNS風アプリ";
   @override
   Widget build(BuildContext context) {
     //　マテリアルアプリを返す（クパチーノにもできる？）
@@ -24,8 +31,9 @@ class MyApp extends StatelessWidget {
       // homeArea(Scaffoldで、ベーシックなマテリアルデザインにできる）
       home: MyHomePage(
         title: this.title,
-        product: this.product,
-      )
+      ),
+      // ここで画面遷移のrouteを設定できる
+      initialRoute: "/",
     );
   }
 }
@@ -33,19 +41,10 @@ class MyApp extends StatelessWidget {
 // ウィジェットクラス
 class MyHomePage extends StatefulWidget {
 
-  MyHomePage({Key key, this.title, this.product}) : super(key: key);
-
-  // This widget is the home page of your application. It is stateful, meaning
-  // that it has a State object (defined below) that contains fields that affect
-  // how it looks.
-
-  // This class is the configuration for the state. It holds the values (in this
-  // case the title) provided by the parent (in this case the App widget) and
-  // used by the build method of the State. Fields in a Widget subclass are
-  // always marked "final".
+  // 初期化
+  MyHomePage({Key key, this.title}) : super(key: key);
 
   final String title;
-  final String product;
 
   // ここで、ステートを読み込む
   @override
@@ -53,64 +52,47 @@ class MyHomePage extends StatefulWidget {
 }
 
 // ステートクラス（ウィジェットで読み込ませる）
-class _MyHomePageState extends State<MyHomePage> {
+class _MyHomePageState extends State<MyHomePage>{
 
-  Product _product;
-
-  static final _products = [Product("りんご", 200), Product("みかん", 300)];
-  // 表示するもの
-
-  @override
-  void initState(){
-    super.initState();
-    _product = _products.first;
-  }
-
-  void _setProduct(){
-    setState(() {
-      // シャッフル
-      _product = (_products..shuffle()).first;
-    });
-
-}
+  final _selectedPage = [PostListPage(), ProfilePage()];
+  int    _selectedIndex = 0;
 
   @override
   Widget build(BuildContext context) {
-    // This method is rerun every time setState is called, for instance as done
-    // by the _incrementCounter method above.
-    //
-    // The Flutter framework has been optimized to make rerunning build methods
-    // fast, so that you can just rebuild anything that needs updating rather
-    // than having to individually change instances of widgets.
+
+    // 画面作成
     return Scaffold(
       appBar: AppBar(
-        // Here we take the value from the MyHomePage object that was created by
-        // the App.build method, and use it to set our appbar title.
         title: Text(widget.title),
       ),
-      body: Text(_product.toString(), style: TextStyle(fontSize: 32.0),),
-      // 右下にボタンが出せる
-      floatingActionButton: FloatingActionButton(
-        onPressed: _setProduct,  // タップした時
-        tooltip: 'set product.', //
-        child: Icon(Icons.star), //
-      ), // This trailing comma makes auto-formatting nicer for build methods.
+      body: Column(
+        children: <Widget>[
+          Expanded(
+            child: _selectedPage[_selectedIndex],
+          ),
+          BottomNavigationBar(
+            currentIndex: _selectedIndex,
+            items: <BottomNavigationBarItem>[
+              BottomNavigationBarItem(
+                title: Text("投稿"),
+                icon: Icon(Icons.home)
+              ),
+              BottomNavigationBarItem(
+                title: Text("プロフィール"),
+                icon: Icon(Icons.account_circle)
+              )
+            ],
+            onTap: (int value){
+              setState(() {
+                _selectedIndex = value;
+              });
+            },
+          )
+        ],
+      )
     );
   }
 }
 
-// オブジェクトを定義
-class Product{
-  String _fruit;
-  int    _price;
 
-  // コンストラクタ
-  Product(this._fruit, this._price) :super();
-
-  // 商品、価格
-  @override
-  String toString(){
-    return this._fruit + this._price.toString() + "Yen";
-  }
-}
 
