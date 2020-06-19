@@ -128,18 +128,18 @@ class _PostListState extends State<PostListPage>{
   // 投稿
   void _tapPostButton(){
     // 未入力ならダメ
-    setState(() {
-      if(_textEditingController.text != "") {
+    if(_textEditingController.text != "") {
+      setState(() {
         print("firestore add");
         Firestore.instance.collection(_talkRoom).add({
           "profileName": _profileName,
-          "iconName"   : _iconName,
-          "createTime" : DateTime.now(),
-          "content"    : _textEditingController.text
+          "iconName": _iconName,
+          "createTime": DateTime.now(),
+          "content": _textEditingController.text
         });
-      }
-      _textEditingController.text = "";
-    });
+        _textEditingController.text = "";
+      });
+    }
   }
 
 
