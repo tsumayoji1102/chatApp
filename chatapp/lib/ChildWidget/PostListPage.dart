@@ -131,7 +131,7 @@ class _PostListState extends State<PostListPage>{
     if(_textEditingController.text != "") {
       setState(() {
         print("firestore add");
-        Firestore.instance.collection(_talkRoom).add({
+        Firestore.instance.collection("rooms").document(_talkRoom).collection(_talkRoom).add({
           "profileName": _profileName,
           "iconName": _iconName,
           "createTime": DateTime.now(),
@@ -152,7 +152,7 @@ class _PostListState extends State<PostListPage>{
               child: Expanded(
                   child: StreamBuilder<QuerySnapshot>(
                     // トークルームを指定
-                    stream: Firestore.instance.collection(_talkRoom).snapshots(),
+                    stream: Firestore.instance.collection("rooms").document(_talkRoom).collection(_talkRoom).snapshots(),
                     builder: (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot){
                       if(snapshot.hasError){
                         print(snapshot.error);
