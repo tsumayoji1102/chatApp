@@ -36,7 +36,7 @@ class _PostListState extends State<PostListPage>{
   @override
   void initState(){
     super.initState();
-
+    print("PostListPage initState");
     // コントローラ初期化
     _textEditingController = TextEditingController();
     _getAccountData();
@@ -55,7 +55,7 @@ class _PostListState extends State<PostListPage>{
     List<Widget> list = [];
     
     var documents = snapshot.data.documents;
-    documents.sort((a, b) => (b["createTime"]).compareTo(a["createTime"]));
+    documents.sort((a, b) => (b["createTime"] as Timestamp).compareTo(a["createTime"]));
 
     for(var document in documents){
       //var document = documents[i];

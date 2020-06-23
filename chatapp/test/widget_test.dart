@@ -16,12 +16,17 @@ void main() {
     await tester.pumpWidget(MyApp()); // appのインスタンス作成
     await tester.pump();              // フレームへのトリガー(launch)
 
-    /*
-    extept(x1 , x2)
-     */
-
-    // Verify that our counter has incremented.
-    //expect(find.text('0'), findsNothing);
-    //expect(find.text('1'), findsOneWidget);
   });
 }
+
+void checkStartScreenTest(){
+  testWidgets('check start screen test', (WidgetTester tester) async {
+    // テストの実行
+    await tester.pumpWidget(MyApp()); // appのインスタンス作成
+    await tester.pump();              // フレームへのトリガー(launch)
+
+    expect(find.text("SNS風アプリ"), findsOneWidget);
+    expect(find.text("投稿"), findsOneWidget);
+  });
+}
+
