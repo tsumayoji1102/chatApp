@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
 // 他ファイル読み込み
-import 'package:chatapp/ChildWidget/PostListPage.dart';
+import 'package:chatapp/ChildWidget/PostList/PostListPage.dart';
 import 'package:chatapp/ChildWidget/ProfilePage.dart';
 
 import 'dart:typed_data';
