@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'dart:collection';
+import 'package:chatapp/Widget/ChildWidget/PostList/PostListViewModel.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -16,14 +17,14 @@ class _PostListState extends State<PostListPage>{
 
   // アイコン用
   final iconList = {
-    "account_circle": Icons.account_circle,
-    "audiotrack"    : Icons.audiotrack,
-    "android"       : Icons.android,
-    "home"          : Icons.home,
-    "bluetooth"     : Icons.bluetooth
+  "account_circle": Icons.account_circle,
+  "audiotrack"    : Icons.audiotrack,
+  "android"       : Icons.android,
+  "home"          : Icons.home,
+  "bluetooth"     : Icons.bluetooth
   };
   // 投稿リスト
-  List<Widget> postList = [];
+  List<Widget> postWidgetList = [];
 
   /* パラメータ　*/
   String _talkRoom    = "room1"; // トークルーム設定
@@ -33,12 +34,20 @@ class _PostListState extends State<PostListPage>{
   // TextField用
   TextEditingController _textEditingController;
 
+  // viewModel
+  PostListViewModel _viewModel;
+  List<Post> _postList;
+
   @override
   void initState(){
     super.initState();
     print("PostListPage initState");
+
     // コントローラ初期化
     _textEditingController = TextEditingController();
+    // viewModel初期化
+    _viewModel = PostListViewModel();
+
     _getAccountData();
   }
 
@@ -53,9 +62,6 @@ class _PostListState extends State<PostListPage>{
   List<Widget> _makePostCell(AsyncSnapshot<QuerySnapshot> snapshot){
 
     List<Widget> list = [];
-    
-    var documents = snapshot.data.documents;
-    documents.sort((a, b) => (b["createTime"] as Timestamp).compareTo(a["createTime"]));
 
     for(var document in documents){
       //var document = documents[i];
@@ -131,12 +137,8 @@ class _PostListState extends State<PostListPage>{
     if(_textEditingController.text != "") {
       setState(() {
         print("firestore add");
-        Firestore.instance.collection("rooms").document(_talkRoom).collection(_talkRoom).add({
-          "profileName": _profileName,
-          "iconName": _iconName,
-          "createTime": DateTime.now(),
-          "content": _textEditingController.text
-        });
+        // 追加
+        _viewModel.addPost(_talkRoom, _profileName, _iconName, _textEditingController.text);
         _textEditingController.text = "";
       });
     }

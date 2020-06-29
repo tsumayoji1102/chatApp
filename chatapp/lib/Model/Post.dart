@@ -1,34 +1,38 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:intl/intl.dart';
 import 'package:intl/date_symbol_data_local.dart';
+import 'package:flutter/foundation.dart';
 
 class Post{
 
-  String    _profileName;
-  String    _iconName;
-  String    _content;
-  Timestamp _createTime;
+  Post({
+    @required this.profileName,
+    @required this.iconName,
+    @required this.content,
+    @required this.createTime
+  });
 
-  init(String profileName, String iconName, String content, Timestamp createTime){
-    this._profileName = profileName;
-    this._iconName    = iconName;
-    this._content     = content;
-    this._createTime  = createTime;
+  String    profileName;
+  String    iconName;
+  String    content;
+  DateTime  createTime;
+
+  // firestoreから直にオブジェクト生成
+  factory Post.fromMap(Map<dynamic, dynamic> value){
+    return Post(
+      profileName: value["profileName"],
+      iconName:    value["iconName"],
+      content:     value["content"],
+      createTime: (value["createTime"] as Timestamp).toDate()
+    );
   }
 
-  String getProfileName(){
-    return this._profileName;
-  }
-  String getIconName(){
-    return this._iconName;
-  }
-  String getContent(){
-    return this._content;
-  }
+  // DateTimeを変換
   String getCreateTime(){
-    var date = this._createTime.toDate();
     var format = DateFormat('yyy/MM/dd HH:mm', 'ja_JP');
-    var createTime = format.format(date);
+    var createTime = format.format(this.createTime);
     return createTime;
   }
+
+
 }
