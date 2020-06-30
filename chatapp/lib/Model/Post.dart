@@ -1,7 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:intl/intl.dart';
-import 'package:intl/date_symbol_data_local.dart';
 import 'package:flutter/foundation.dart';
+import 'package:intl/date_symbol_data_local.dart';
 
 class Post{
 
@@ -29,10 +29,9 @@ class Post{
 
   // DateTimeを変換
   String getCreateTime(){
+    initializeDateFormatting("ja_JP");
     var format = DateFormat('yyy/MM/dd HH:mm', 'ja_JP');
     var createTime = format.format(this.createTime);
     return createTime;
   }
-
-
 }
