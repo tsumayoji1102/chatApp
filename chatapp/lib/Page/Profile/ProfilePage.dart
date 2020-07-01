@@ -1,3 +1,4 @@
+import 'package:chatapp/Page/Profile/ProfileViewModel.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -13,16 +14,20 @@ class ProfilePage extends StatefulWidget{
 
 class _ProfileState extends State<ProfilePage>{
 
-  final iconList = {"account_circle": Icons.account_circle,
+  final iconList = {
+    "account_circle": Icons.account_circle,
     "audiotrack"    : Icons.audiotrack,
     "android"       : Icons.android,
-    "home":           Icons.home,
-    "bluetooth"      :Icons.bluetooth
+    "home"          : Icons.home,
+    "bluetooth"     : Icons.bluetooth
   };
 
   String _defaultProfileName = "";
   String _defaultIconName    = "";
   String _selectedIconName   = "";
+
+  // viewModel
+  ProfileViewModel _viewModel;
 
   // UIパーツ
   TextEditingController textController = TextEditingController();
@@ -33,44 +38,20 @@ class _ProfileState extends State<ProfilePage>{
   void initState(){
     super.initState();
     print("ProfilePage initState ${DateTime.now()}");
+    _viewModel = ProfileViewModel();
     getProfile();
-  }
-
-  // セッター
-  void setProfileName(String profileName) async{
-    SharedPreferences pref = await SharedPreferences.getInstance();
-    pref.setString("profileName", profileName);
-
   }
 
   // プロフィール名反映
   void getProfile() async {
     SharedPreferences pref = await SharedPreferences.getInstance();
     setState((){
-      // 名前
-      var name = pref.getString("profileName");
-      print("get name '${name}'");
-      if(name == null){
-        pref.setString("profileName", "default");
-        _defaultProfileName = "default";
-        textController.text = "default";
-      }else{
-        _defaultProfileName = name;
-        textController.text = name;
-      }
-      // アイコン
-      var iconName = pref.getString("iconName");
-      print("get iconName ${iconName}");
-      if(iconName == null){
-        pref.setString("iconName", "account_circle");
-        _icon = Icon(iconList["account_circle"], size: 100);
-        _defaultIconName  = "account_circle";
-        _selectedIconName = "account_circle";
-      }else{
-        _icon = Icon(iconList[iconName], size: 100);
-        _defaultIconName  = iconName;
-        _selectedIconName = iconName;
-      }
+      var iconName = _viewModel.getIconName();
+      _icon = Icon(iconList[iconName], size: 100);
+      _defaultIconName = iconName;
+      var profileName = _viewModel.getProfileName();
+      textController.text = profileName;
+      _defaultProfileName = profileName;
     });
   }
 
@@ -107,14 +88,13 @@ class _ProfileState extends State<ProfilePage>{
   // 保存ボタンタップ時
   void _tapSaveButton() async{
     print("tapButton ${DateTime.now()}");
-    SharedPreferences pref = await SharedPreferences.getInstance();
     // プロフィール名セット
     if(_defaultProfileName != textController.text){
-      pref.setString("profileName", textController.text);
+      _viewModel.setProfileName(textController.text);
     }
     // 画像をセット
     if(_defaultIconName != _selectedIconName){
-      pref.setString("iconName", _selectedIconName);
+      _viewModel.setIconName(_selectedIconName);
     }
   }
 
